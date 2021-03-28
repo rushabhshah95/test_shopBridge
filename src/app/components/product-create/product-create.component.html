@@ -1,0 +1,133 @@
+<section>
+  <div class="container">
+    <h4 class="text-center"><u>Add Product</u></h4>
+    <div class="col-md-12 col-xs-12">
+      <div class="text-center" *ngIf="showProductCreateSuccessMsg || showProductCreateFailMsg">
+        <div>
+          <p class="success-message"  *ngIf="showProductCreateSuccessMsg">
+              <strong>{{ productCreateSuccessMsg }}</strong>
+          </p>
+        </div>
+        <div>
+          <p class="error-message"  *ngIf="showProductCreateFailMsg">
+            <strong>{{ productCreateFailMsg }}</strong>
+        </p>
+        </div>
+      </div>
+      <div class="form">
+        <form [formGroup]="formGroup" (ngSubmit)="onSubmit(formGroup.value)">
+          <div class="form-group">
+            <label>Product Name:</label>
+            <input type="text" 
+            formControlName="productName" 
+            class="form-control" 
+            [ngClass]="{'form-submitted': formSubmitted}"
+            />
+
+            <div *ngIf="formGroup.controls['productName'].errors?.required &&
+              formGroup.controls['productName'].touched"
+              class="error-message">
+                You need to enter name of product.
+            </div>
+                   
+            <div *ngIf="formGroup.controls['productName'].errors?.maxlength &&
+              formGroup.controls['productName'].touched"
+                class="error-message">
+                  Product name should not be more than 20 alphabets.
+            </div>
+
+            <div *ngIf="formGroup.controls['productName'].errors?.pattern &&
+              formGroup.controls['productName'].touched"
+                class="error-message">
+                  Product name must contain Alphabets along with space.
+            </div>    
+          </div>
+
+          <div class="form-group">
+            <label>Product Description:</label>
+            <textarea 
+            formControlName="productDesc" 
+            class="form-control"
+            [ngClass]="{'form-submitted': formSubmitted}"
+            > 
+            </textarea>
+
+            <div *ngIf="formGroup.controls['productDesc'].errors?.required &&
+              formGroup.controls['productDesc'].touched"
+              class="error-message">
+                You need to enter brief description of product.
+            </div>
+                   
+            <div *ngIf="formGroup.controls['productDesc'].errors?.maxlength &&
+              formGroup.controls['productDesc'].touched"
+                class="error-message">
+                  Product description should not be more than 50 characters.
+            </div>
+
+            <div *ngIf="formGroup.controls['productDesc'].errors?.pattern &&
+              formGroup.controls['productDesc'].touched"
+                class="error-message">
+                  Product description must not contain special characters.
+            </div>    
+          </div>
+
+          <div class="form-group">
+            <label>Product Price:</label>
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text">$</span>
+              </div>
+              <input
+              type="text"
+              class="form-control"
+              formControlName="productPrice"
+              [ngClass]="{'form-submitted': formSubmitted}"
+              />
+            </div>
+
+            <div *ngIf="formGroup.controls['productPrice'].errors?.required &&
+            formGroup.controls['productPrice'].touched"
+            class="error-message">
+            You need to enter price of product.
+          </div>
+               
+          <div *ngIf="formGroup.controls['productPrice'].errors?.pattern &&
+            formGroup.controls['productPrice'].touched"
+            class="error-message">
+              Product price should be in digits upto two decimals. 
+          </div> 
+
+              
+          </div>
+            
+            <!-- <div class="form-group">
+                <label>Last Name</label>
+                <input type="text" formControlName="lastName" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.lastName.errors }" />
+                <div *ngIf="submitted && f.lastName.errors" class="invalid-feedback">
+                    <div *ngIf="f.lastName.errors.required">Last Name is required</div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Email</label>
+                <input type="text" formControlName="email" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.email.errors }" />
+                <div *ngIf="submitted && f.email.errors" class="invalid-feedback">
+                    <div *ngIf="f.email.errors.required">Email is required</div>
+                    <div *ngIf="f.email.errors.email">Email must be a valid email address</div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" formControlName="password" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.password.errors }" />
+                <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
+                    <div *ngIf="f.password.errors.required">Password is required</div>
+                    <div *ngIf="f.password.errors.minlength">Password must be at least 6 characters</div>
+                </div>
+            </div> -->
+            <div class="form-group">
+                <button class="btn btn-primary" [disabled]="formGroup.invalid">Register</button>
+            </div>
+        </form>      
+      </div>
+    </div>
+  </div>
+</section>

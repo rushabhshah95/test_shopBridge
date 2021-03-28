@@ -1,0 +1,331 @@
+<!-- <div class="list row">
+    <div class="col-md-12">
+      <div class="input-group mb-4">
+        <input
+          type="text"
+          class="form-control"
+          placeholder="Search by name"
+          [(ngModel)]="name"
+        />
+        <div class="input-group-append">
+          <button
+            class="btn btn-outline-secondary"
+            type="button"
+            (click)="searchByName()"
+          >
+            Search
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-12">
+      <h4>Product List</h4>
+      <ul class="list-group">
+        <li
+          class="list-group-item"
+          *ngFor="let product of products; let i = index"
+          [class.active]="i == currentIndex"
+          (click)="setCurrentProduct(product, i)"
+        >
+        <h6>Product: {{product.name}}</h6>
+        <h6>Product Description: {{product.description}}</h6>
+        <h6>Product Price: {{product.price}}</h6>
+        <button (click)="EditCurrentProduct(product,i)">Edit</button>
+        <button (click)="deleteCurrentProduct(product,i)">Delete</button>
+        </li>
+      </ul>
+  
+      <button class="m-4 btn btn-sm btn-danger" (click)="deleteAllProducts()">
+        Delete All
+      </button>
+    </div>
+    <div class="col-md-12">
+      <div *ngIf="currentProduct">
+        <h4>Product</h4>
+        <div>
+          <label><strong>Name:</strong></label> 
+          {{currentProduct.name}}
+        </div>
+        <div>
+          <label><strong>Description:</strong></label>
+          {{currentProduct.description}}
+        </div>
+        <div>
+          <label><strong>Price:</strong></label>
+          {{currentProduct.price}}
+        </div>
+  
+        <a class="badge badge-warning" routerLink="/products/">
+          Edit
+        </a>
+      </div>
+  
+      <div *ngIf="!currentProduct">
+        <br />
+        <p>Please click on a product</p>
+      </div>
+    </div>
+  </div> -->
+
+<section>
+  <div class="container">
+    <h4 class="text-center"><u>Manage Products</u></h4>
+    <div class="text-center" *ngIf="showProductUpdateSuccessMsg || showProductUpdateFailMsg">
+      <div class="success-message">
+        <p  *ngIf="showProductUpdateSuccessMsg">
+            <strong>{{ productUpdatedSuccessMsg }}</strong>
+        </p>
+      </div>
+      <div class="error-message">
+        <p   *ngIf="showProductUpdateFailMsg">
+          <strong>{{ productUpdateFailMsg }}</strong>
+        </p>
+      </div>
+    </div>
+    <div class="row">
+      <div *ngFor="let product of products; index as index" class="col-lg-6 col-md-3 col-xs-12 col-sm-12 mb-4">
+        <div class="card h-100" ngbTooltip="Double Click on a details to update and click on save button to save updated details!"
+        [openDelay]="1000" [closeDelay]="2000">
+          <div class="card-header text-center">{{product.productId}}</div>
+          <div class="card-body">
+            <h6 class="card-title">
+              <editable (update)="updateField(index, 'productName')">
+                <ng-template viewMode>
+                  <label>Name:</label>
+                  <br>
+                  <p>{{product.productName}}</p>
+                </ng-template>
+                <ng-template editMode>
+                  <input type="text"
+                  class="form-control" 
+                  [formControl]="getControl(index, 'productName')" 
+                  focusable>
+                  <div *ngIf="productNameValidationMsg"
+                    class="error-message">
+                    Product name should contains Alphabets and it should be less than 20 characters. 
+                  </div>
+                </ng-template>
+              </editable>
+            </h6>
+            <div class="card-text">
+              <editable (update)="updateField(index, 'productDesc')">
+                <ng-template viewMode>
+                  <label>Description:</label>
+                  <br> 
+                  <p>{{product.productDesc}}</p>
+                </ng-template>
+                <ng-template editMode>
+                  <textarea  class="form-control" [formControl]="getControl(index, 'productDesc')" focusable></textarea>
+                  <div *ngIf="productNameValidationMsg"
+                    class="error-message">
+                    Product description should not contain special characters and it should be less than 50 characters. 
+                  </div>
+                </ng-template>
+              </editable>
+
+              <editable (update)="updateField(index, 'productPrice')">
+                <ng-template viewMode>
+                  <label>Price:</label>
+                  <br> 
+                  <p>{{product.productPrice}}</p>
+                </ng-template>
+                <ng-template editMode>
+                  <input type="text"  class="form-control" [formControl]="getControl(index, 'productPrice')" focusable />
+                  <div *ngIf="productPriceValidationMsg"
+                    class="error-message">
+                    Product price should be in digits upto two decimals.  
+                  </div>
+                </ng-template>
+              </editable>
+            </div>
+          </div>
+
+          <div class="card-footer text-center">
+            <button class="btn btn-success mr-2" (click)="saveCurrentProduct(product)" type="button" id="save">
+              <fa-icon [icon]="saveIcon"></fa-icon>&nbsp;Save
+            </button>
+            
+            <button class="btn btn-danger" (click)="saveCurrentProduct(product)" type="button" id="delete">
+              <fa-icon [icon]="deleteIcon"></fa-icon>&nbsp;Delete
+            </button>
+          </div>
+           
+          
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+  <!-- <div class="col-md-12">
+    <h4>Manage Products</h4>
+    <ul class="list-group">
+      <li
+        class="list-group-item"
+        *ngFor="let product of products; index as index"
+      >
+      <h6>Product Id: 
+        <editable>
+          <ng-template viewMode>{{product.id}}</ng-template>
+        </editable>
+      </h6>
+      <h6>Product: 
+        <editable (update)="updateField(index, 'name')">
+          <ng-template viewMode>{{product.name}}</ng-template>
+          <ng-template editMode>
+            <input type="text" [formControl]="getControl(index, 'name')" focusable>
+          </ng-template>
+        </editable>
+      </h6>
+      <h6>Product Description: 
+        <editable (update)="updateField(index, 'description')">
+          <ng-template viewMode>{{product.description}}</ng-template>
+          <ng-template editMode>
+            <textarea class="col-md-12" [formControl]="getControl(index, 'description')" focusable></textarea>
+          </ng-template>
+        </editable>
+      </h6>
+      <h6>Product Price: 
+        <editable (update)="updateField(index, 'price')">
+          <ng-template viewMode>{{product.price}}</ng-template>
+          <ng-template editMode>
+            <input type="number" [formControl]="getControl(index, 'price')" focusable>
+          </ng-template>
+        </editable>
+      </h6>
+      <button (click)="saveCurrentProduct(product,i)">Save</button>
+      <button (click)="deleteCurrentProduct(product,i)">Delete</button> -->
+      <!-- </li>
+    </ul> -->
+
+    <!-- <button class="m-4 btn btn-sm btn-danger" (click)="deleteAllProducts()">
+      Delete All
+    </button> -->
+  <!-- </div> -->
+
+  --- Original Entities ---
+<br>
+
+<code>
+  {{products | json }}
+</code>
+
+<br>
+<br>
+
+--- ArrayForm Value ---
+
+<br>
+<code>{{controls.value | json }}</code>
+
+
+ 
+<section id="gallery">
+  <div class="container">
+    <div class="row">
+   
+  
+    <div class="col-lg-4 mb-4">
+    <div class="card">
+      <!-- <img src="https://images.unsplash.com/photo-1477862096227-3a1bb3b08330?ixlib=rb-1.2.1&auto=format&fit=crop&w=700&q=60" alt="" class="card-img-top">-->
+      <div class="card-body">
+        <h5 class="card-title">Sunset</h5>
+        <p class="card-text">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ut eum similique repellat a laborum, rerum voluptates ipsam eos quo tempore iusto dolore modi dolorum in pariatur. Incidunt repellendus praesentium quae!</p>
+       <a href="" class="btn btn-outline-success btn-sm"><i class="fas fa-save"></i>Save</a>
+        <a href="" class="btn btn-outline-danger btn-sm"><i class="fas fa-trash"></i>Delete</a>
+      </div>
+     </div>
+    </div>
+    <div class="col-lg-4 mb-4">
+      <div class="card">
+        <!-- <img src="https://images.unsplash.com/photo-1477862096227-3a1bb3b08330?ixlib=rb-1.2.1&auto=format&fit=crop&w=700&q=60" alt="" class="card-img-top">-->
+        <div class="card-body">
+          <h5 class="card-title">Sunset</h5>
+          <p class="card-text">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ut eum similique repellat a laborum, rerum voluptates ipsam eos quo tempore iusto dolore modi dolorum in pariatur. Incidunt repellendus praesentium quae!</p>
+         <a href="" class="btn btn-outline-success btn-sm"><i class="fas fa-save"></i>Save</a>
+          <a href="" class="btn btn-outline-danger btn-sm"><i class="fas fa-trash"></i>Delete</a>
+        </div>
+       </div>
+      </div>
+      <div class="col-lg-4 mb-4">
+        <div class="card">
+          <!-- <img src="https://images.unsplash.com/photo-1477862096227-3a1bb3b08330?ixlib=rb-1.2.1&auto=format&fit=crop&w=700&q=60" alt="" class="card-img-top">-->
+          <div class="card-body">
+            <h5 class="card-title">Sunset</h5>
+            <p class="card-text">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ut eum similique repellat a laborum, rerum voluptates ipsam eos quo tempore iusto dolore modi dolorum in pariatur. Incidunt repellendus praesentium quae!</p>
+           <a href="" class="btn btn-outline-success btn-sm"><i class="fas fa-save"></i>Save</a>
+            <a href="" class="btn btn-outline-danger btn-sm"><i class="fas fa-trash"></i>Delete</a>
+          </div>
+         </div>
+        </div>
+        <div class="col-lg-4 mb-4">
+          <div class="card">
+            <!-- <img src="https://images.unsplash.com/photo-1477862096227-3a1bb3b08330?ixlib=rb-1.2.1&auto=format&fit=crop&w=700&q=60" alt="" class="card-img-top">-->
+            <div class="card-body">
+              <h5 class="card-title">Sunset</h5>
+              <p class="card-text">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ut eum similique repellat a laborum, rerum voluptates ipsam eos quo tempore iusto dolore modi dolorum in pariatur. Incidunt repellendus praesentium quae!</p>
+             <a href="" class="btn btn-outline-success btn-sm"><i class="fas fa-save"></i>Save</a>
+              <a href="" class="btn btn-outline-danger btn-sm"><i class="fas fa-trash"></i>Delete</a>
+            </div>
+           </div>
+          </div>
+          <div class="col-lg-4 mb-4">
+            <div class="card">
+              <!-- <img src="https://images.unsplash.com/photo-1477862096227-3a1bb3b08330?ixlib=rb-1.2.1&auto=format&fit=crop&w=700&q=60" alt="" class="card-img-top">-->
+              <div class="card-body">
+                <h5 class="card-title">Sunset</h5>
+                <p class="card-text">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ut eum similique repellat a laborum, rerum voluptates ipsam eos quo tempore iusto dolore modi dolorum in pariatur. Incidunt repellendus praesentium quae!</p>
+               <a href="" class="btn btn-outline-success btn-sm"><i class="fas fa-save"></i>Save</a>
+                <a href="" class="btn btn-outline-danger btn-sm"><i class="fas fa-trash"></i>Delete</a>
+              </div>
+             </div>
+            </div>
+            <div class="col-lg-4 mb-4">
+              <div class="card">
+                <!-- <img src="https://images.unsplash.com/photo-1477862096227-3a1bb3b08330?ixlib=rb-1.2.1&auto=format&fit=crop&w=700&q=60" alt="" class="card-img-top">-->
+                <div class="card-body">
+                  <h5 class="card-title">Sunset</h5>
+                  <p class="card-text">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ut eum similique repellat a laborum, rerum voluptates ipsam eos quo tempore iusto dolore modi dolorum in pariatur. Incidunt repellendus praesentium quae!</p>
+                 <a href="" class="btn btn-outline-success btn-sm"><i class="fas fa-save"></i>Save</a>
+                  <a href="" class="btn btn-outline-danger btn-sm"><i class="fas fa-trash"></i>Delete</a>
+                </div>
+               </div>
+              </div>
+              <div class="col-lg-4 mb-4">
+                <div class="card">
+                  <!-- <img src="https://images.unsplash.com/photo-1477862096227-3a1bb3b08330?ixlib=rb-1.2.1&auto=format&fit=crop&w=700&q=60" alt="" class="card-img-top">-->
+                  <div class="card-body">
+                    <h5 class="card-title">Sunset</h5>
+                    <p class="card-text">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ut eum similique repellat a laborum, rerum voluptates ipsam eos quo tempore iusto dolore modi dolorum in pariatur. Incidunt repellendus praesentium quae!</p>
+                   <a href="" class="btn btn-outline-success btn-sm"><i class="fas fa-save"></i>Save</a>
+                    <a href="" class="btn btn-outline-danger btn-sm"><i class="fas fa-trash"></i>Delete</a>
+                  </div>
+                 </div>
+                </div>
+                <div class="col-lg-4 mb-4">
+                  <div class="card">
+                    <!-- <img src="https://images.unsplash.com/photo-1477862096227-3a1bb3b08330?ixlib=rb-1.2.1&auto=format&fit=crop&w=700&q=60" alt="" class="card-img-top">-->
+                    <div class="card-body">
+                      <h5 class="card-title">Sunset</h5>
+                      <p class="card-text">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ut eum similique repellat a laborum, rerum voluptates ipsam eos quo tempore iusto dolore modi dolorum in pariatur. Incidunt repellendus praesentium quae!</p>
+                     <a href="" class="btn btn-outline-success btn-sm"><i class="fas fa-save"></i>Save</a>
+                      <a href="" class="btn btn-outline-danger btn-sm"><i class="fas fa-trash"></i>Delete</a>
+                    </div>
+                   </div>
+                  </div>
+                  <div class="col-lg-4 mb-4">
+                    <div class="card">
+                      <!-- <img src="https://images.unsplash.com/photo-1477862096227-3a1bb3b08330?ixlib=rb-1.2.1&auto=format&fit=crop&w=700&q=60" alt="" class="card-img-top">-->
+                      <div class="card-body">
+                        <h5 class="card-title">Sunset</h5>
+                        <p class="card-text">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ut eum similique repellat a laborum, rerum voluptates ipsam eos quo tempore iusto dolore modi dolorum in pariatur. Incidunt repellendus praesentium quae!</p>
+                       <a href="" class="btn btn-outline-success btn-sm"><i class="fas fa-save"></i>Save</a>
+                        <a href="" class="btn btn-outline-danger btn-sm"><i class="fas fa-trash"></i>Delete</a>
+                      </div>
+                     </div>
+                    </div>
+  </div>
+</div>
+</section>
+
+

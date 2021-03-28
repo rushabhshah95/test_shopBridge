@@ -1,0 +1,22 @@
+{
+  "products": [
+    {
+      "productId": 1,
+      "productName": "Fantastic Wooden Car",
+      "productDesc": "Sit sed tempore dolorem. Blanditiis ex aut fugiat quia nihil ipsa dolor assumenda odit.",
+      "productPrice": "828.00"
+    },
+    {
+      "productId": 2,
+      "productName": "Fantastic Steel Sausages",
+      "productDesc": "Sint consequatur officia sed voluptates cumque provident. Mollitia veritatis deserunt consequatur ratione inventore quidem culpa non sit.",
+      "productPrice": "75.00"
+    },
+    {
+      "productId": 3,
+      "productName": "Rustic Metal Table",
+      "productDesc": "Voluptas et commodi est sapiente debitis facilis sed et et. Vel velit aut.",
+      "productPrice": "723.00"
+    }
+  ]
+}
